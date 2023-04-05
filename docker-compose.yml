@@ -1,0 +1,54 @@
+version: '3'
+
+services:
+  resource-service:
+    build: ./ResourceService
+    restart: always
+    depends_on:
+      - resource-service-db
+    environment:
+      RESOURCE_SERVICE_DB_HOST: host.docker.internal
+      RESOURCE_SERVICE_DB_PORT: 5434
+      RESOURCE_SERVICE_DB_NAME: resourceService
+      RESOURCE_SERVICE_DB_USER: resourceService
+      RESOURCE_SERVICE_DB_PASSWORD: resourceService
+      RESOURCE_SERVICE_AWS_S3_BUCKET: resources-eu-north-1
+      RESOURCE_SERVICE_AWS_S3_ACCESS_KEY: test
+      RESOURCE_SERVICE_AWS_S3_SECRET_KEY: test
+      RESOURCE_SERVICE_AWS_S3_REGION: eu-north-1
+    ports:
+      - "8081:8080"
+
+  song-service:
+    build: ./SongService
+    restart: always
+    depends_on:
+      - song-service-db
+    environment:
+      SONG_SERVICE_DB_HOST: host.docker.internal
+      SONG_SERVICE_DB_PORT: 5433
+      SONG_SERVICE_DB_NAME: songService
+      SONG_SERVICE_DB_USER: songService
+      SONG_SERVICE_DB_PASSWORD: songService
+    ports:
+      - "8080:8080"
+
+  song-service-db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: songService
+      POSTGRES_USER: songService
+      POSTGRES_PASSWORD: songService
+    ports:
+      - "5433:5432"
+
+  resource-service-db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: resourceService
+      POSTGRES_USER: resourceService
+      POSTGRES_PASSWORD: resourceService
+    ports:
+      - "5434:5432"

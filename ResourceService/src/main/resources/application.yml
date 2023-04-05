@@ -1,0 +1,19 @@
+spring:
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+  datasource:
+    url: jdbc:postgresql://localhost:5434/resourceService
+    username: resourceService
+    password: resourceService
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+aws:
+  s3:
+    bucketName: resources-eu-north-1
+    accessKey: testtesttest
+    secretKey: testtesttest
+    region: eu-north-1
