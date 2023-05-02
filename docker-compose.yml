@@ -6,6 +6,7 @@ services:
     restart: always
     depends_on:
       - resource-service-db
+      - rabbitmq-server
     environment:
       RESOURCE_SERVICE_DB_HOST: host.docker.internal
       RESOURCE_SERVICE_DB_PORT: 5434
@@ -33,6 +34,14 @@ services:
     ports:
       - "8080:8080"
 
+  resource-processor:
+    build: ./ResourceProcessor
+    restart: always
+    depends_on:
+      - rabbitmq-server
+    ports:
+      - "8082:8080"
+
   song-service-db:
     image: postgres
     restart: always
@@ -52,3 +61,14 @@ services:
       POSTGRES_PASSWORD: resourceService
     ports:
       - "5434:5432"
+
+  rabbitmq-server:
+    image: rabbitmq:3-management
+    environment:
+      RABBITMQ_DEFAULT_HOST: host.docker.internal
+      RABBITMQ_DEFAULT_PORT: 5672
+      RABBITMQ_DEFAULT_USER: test
+      RABBITMQ_DEFAULT_PASSWORD: test
+    ports:
+      - "5672:5672"
+      - "15672:15672"

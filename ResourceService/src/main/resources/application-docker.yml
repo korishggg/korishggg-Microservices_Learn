@@ -12,6 +12,11 @@ spring:
     multipart:
       max-file-size: 5MB
       max-request-size: 5MB
+  rabbitmq:
+    host: ${RABBITMQ_DEFAULT_HOST}
+    port: ${RABBITMQ_DEFAULT_PORT}
+    username: ${RABBITMQ_DEFAULT_USER}
+    password: ${RABBITMQ_DEFAULT_PASSWORD}
 aws:
   s3:
     bucketName: ${RESOURCE_SERVICE_AWS_S3_BUCKET}

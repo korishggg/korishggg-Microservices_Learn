@@ -39,6 +39,8 @@ public class ResourceServiceImpl implements ResourceService {
 		var resourceName = fileStorageService.uploadFile(multipartFile, bucketName, true);
 		var resource = new Resource(resourceName, bucketName);
 		var saved = resourceRepository.save(resource);
+		// Send Message To RabbitMQ
+
 		LOGGER.info("resource with this id = " + saved.getId() + " is created");
 		return new UploadResourceResponse(saved.getId());
 	}

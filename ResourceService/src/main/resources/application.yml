@@ -11,6 +11,11 @@ spring:
     multipart:
       max-file-size: 5MB
       max-request-size: 5MB
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: test
+    password: test
 aws:
   s3:
     bucketName: resources-eu-north-1
