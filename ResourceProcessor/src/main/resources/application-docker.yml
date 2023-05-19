@@ -1,0 +1,13 @@
+spring:
+  rabbitmq:
+    host: host.docker.internal
+    port: 5672
+    username: ${RABBITMQ_DEFAULT_USER}
+    password: ${RABBITMQ_DEFAULT_PASSWORD}
+services:
+  song-service:
+    host: ${SONG_SERVICE_HOST}
+    port: ${SONG_SERVICE_PORT}
+  resource-service:
+    host: ${RESOURCE_SERVICE_HOST}
+    port: ${RESOURCE_SERVICE_PORT}

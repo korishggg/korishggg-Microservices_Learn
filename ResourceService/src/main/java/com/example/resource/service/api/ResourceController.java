@@ -4,7 +4,9 @@ import com.example.resource.service.annotations.IsMp3;
 import com.example.resource.service.dto.UploadResourceResponse;
 import com.example.resource.service.service.ResourceService;
 import com.example.resource.service.utils.HttpValidationUtils;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -41,6 +43,7 @@ public class ResourceController {
 		if (rangeHeader != null) {
 			Long[] range = HttpValidationUtils.parseRangeHeaders(rangeHeader);
 			var result = resourceService.downloadFilesByResourceIdRange(range);
+//			TODO LATER fix correct file output
 			return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
 								 .body(result);
 		}
@@ -48,10 +51,18 @@ public class ResourceController {
 							 .body("Please specify Range Header by this pattern X-X");
 	}
 
-	@GetMapping("{id}")
-	public ResponseEntity<?> getById(@PathVariable("id") Long id) {
-		var fileByResourceId = this.resourceService.downloadFileByResourceId(id);
-		return ResponseEntity.ok(fileByResourceId);
+	@GetMapping(value = "{id}")
+	public ResponseEntity<byte[]> getById(@PathVariable("id") Long id) {
+		var fileDto = this.resourceService.downloadFileByResourceId(id);
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileDto.fileName());
+
+		return ResponseEntity.ok()
+				.headers(headers)
+				.contentLength(fileDto.fileBytes().length)
+				.contentType(MediaType.APPLICATION_OCTET_STREAM)
+				.body(fileDto.fileBytes());
 	}
 
 	@DeleteMapping
