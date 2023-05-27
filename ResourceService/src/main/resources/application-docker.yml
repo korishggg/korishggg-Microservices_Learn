@@ -10,8 +10,13 @@ spring:
     driver-class-name: org.postgresql.Driver
   servlet:
     multipart:
-      max-file-size: 5MB
-      max-request-size: 5MB
+      max-file-size: 10MB
+      max-request-size: 10MB
+  rabbitmq:
+    host: host.docker.internal
+    port: 5672
+    username: ${RABBITMQ_DEFAULT_USER}
+    password: ${RABBITMQ_DEFAULT_PASSWORD}
 aws:
   s3:
     bucketName: ${RESOURCE_SERVICE_AWS_S3_BUCKET}

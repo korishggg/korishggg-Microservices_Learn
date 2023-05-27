@@ -1,0 +1,13 @@
+server:
+  port: 8083
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+services:
+  song-service:
+    url: http://localhost:8082/songs
+  resource-service:
+    url: http://localhost:8084/resources

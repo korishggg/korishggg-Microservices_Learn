@@ -9,14 +9,11 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.example.resource.service.exceptions.AwsInteractionException;
 import com.example.resource.service.service.FileStorageService;
-import com.example.resource.service.utils.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -61,16 +58,15 @@ public class FileStorageServiceImpl implements FileStorageService {
 	}
 
 	@Override
-	public File downloadFile(String fileName, String bucketName) {
+	public byte[] downloadFile(String fileName, String bucketName) {
 		S3Object s3object = amazonS3Client.getObject(bucketName, fileName);
 		S3ObjectInputStream inputStream = s3object.getObjectContent();
-		File result = null;
 		try {
-			result = FileUtils.convertInputStreamToFile(inputStream, fileName);
-		} catch (IOException e) {
-			LOGGER.error(e.getMessage());
+			return inputStream.readAllBytes();
+		} catch (Exception e) {
+			LOGGER.error("Some error has occurred = " + e.getMessage());
+			throw new AwsInteractionException(e.getMessage());
 		}
-		return result;
 	}
 
 	@Override

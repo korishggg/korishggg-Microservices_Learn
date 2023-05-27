@@ -7,13 +7,21 @@ spring:
     url: jdbc:postgresql://localhost:5434/resourceService
     username: resourceService
     password: resourceService
+    driver-class-name: org.postgresql.Driver
   servlet:
     multipart:
-      max-file-size: 5MB
-      max-request-size: 5MB
+      max-file-size: 10MB
+      max-request-size: 10MB
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: test
+    password: test
 aws:
   s3:
     bucketName: resources-eu-north-1
     accessKey: testtesttest
     secretKey: testtesttest
     region: eu-north-1
+server:
+  port: 8084

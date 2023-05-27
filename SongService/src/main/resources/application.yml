@@ -7,3 +7,6 @@ spring:
     url: jdbc:postgresql://localhost:5433/songService
     username: songService
     password: songService
+    driver-class-name: org.postgresql.Driver
+server:
+  port: 8082

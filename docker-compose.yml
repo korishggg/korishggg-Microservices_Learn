@@ -6,6 +6,7 @@ services:
     restart: always
     depends_on:
       - resource-service-db
+      - rabbitmq-server
     environment:
       RESOURCE_SERVICE_DB_HOST: host.docker.internal
       RESOURCE_SERVICE_DB_PORT: 5434
@@ -17,7 +18,7 @@ services:
       RESOURCE_SERVICE_AWS_S3_SECRET_KEY: test
       RESOURCE_SERVICE_AWS_S3_REGION: eu-north-1
     ports:
-      - "8081:8080"
+      - "8084:8080"
 
   song-service:
     build: ./SongService
@@ -31,7 +32,20 @@ services:
       SONG_SERVICE_DB_USER: songService
       SONG_SERVICE_DB_PASSWORD: songService
     ports:
-      - "8080:8080"
+      - "8082:8080"
+
+  resource-processor:
+    build: ./ResourceProcessor
+    restart: always
+    depends_on:
+      - rabbitmq-server
+    environment:
+      SONG_SERVICE_HOST: host.docker.internal
+      SONG_SERVICE_PORT: 8082
+      RESOURCE_SERVICE_HOST: host.docker.internal
+      RESOURCE_SERVICE_PORT: 8081
+    ports:
+      - "8083:8080"
 
   song-service-db:
     image: postgres
@@ -52,3 +66,12 @@ services:
       POSTGRES_PASSWORD: resourceService
     ports:
       - "5434:5432"
+
+  rabbitmq-server:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
